@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Real Estate Health Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #map { height: 100vh; width: 100%; }
+        .controls { position: absolute; top: 10px; right: 10px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.2); z-index: 1000; }
+        .layer-control { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="controls">
+        <h3>Health & Real Estate Layers</h3>
+        <div class="layer-control"><input type="checkbox" id="home-prices" checked> Home Prices (Zillow)</div>
+        <div class="layer-control"><input type="checkbox" id="flood-zones"> Flood Zones</div>
+        <div class="layer-control"><input type="checkbox" id="water-quality"> Water Quality (PFAS)</div>
+        <div class="layer-control"><input type="checkbox" id="crime"> Crime Rates</div>
+        <div class="layer-control"><input type="checkbox" id="schools"> School Scores</div>
+        <div class="layer-control"><input type="checkbox" id="health"> Health (Cancer, Autism, etc.)</div>
+        <div class="layer-control"><input type="checkbox" id="toxic"> Toxic Sites</div>
+        <button onclick="findHealthiestPlaces()">Find Healthiest Places</button>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([39.8283, -98.5795], 5); // US center
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Placeholder for layers - in full app these would be GeoJSON from backend API
+        const layers = {
+            homePrices: L.layerGroup().addTo(map),
+            floodZones: L.layerGroup(),
+            waterQuality: L.layerGroup(),
+            crime: L.layerGroup(),
+            schools: L.layerGroup(),
+            health: L.layerGroup(),
+            toxic: L.layerGroup()
+        };
+
+        // Sample marker for demo
+        L.marker([40.7128, -74.0060]).addTo(layers.homePrices).bindPopup('NYC: Avg home $1.2M, Low flood risk');
+
+        document.getElementById('home-prices').onchange = function() {
+            if (this.checked) map.addLayer(layers.homePrices);
+            else map.removeLayer(layers.homePrices);
+        };
+        // Similar for other layers (simplified for skeleton)
+
+        function findHealthiestPlaces() {
+            alert('In full app: This would query the backend for segmented data overlaps and highlight best areas based on all metrics.');
+        }
+
+        // TODO: Add real data fetching from FastAPI backend, segmentation, filtering UI
+    </script>
+</body>
+</html>
